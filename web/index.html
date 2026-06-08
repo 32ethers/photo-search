@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Search</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <header class="header">
+            <h1>📷 Photo Search</h1>
+            <p>用自然语言搜索你的照片</p>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('search')">🔍 搜索</button>
+                <button class="tab" onclick="switchTab('people')">👤 人物</button>
+            </div>
+
+            <div id="search-panel" class="search-panel">
+                <div class="cond-row" id="content-row">
+                    <label>🔍 内容</label>
+                    <input id="c-text" type="text" placeholder="视觉关键词，如：猫、日落、小孩">
+                </div>
+                <div class="cond-row">
+                    <label>📅 从</label>
+                    <input id="c-date-from" type="date">
+                    <label>至</label>
+                    <input id="c-date-to" type="date">
+                </div>
+                <div class="cond-row">
+                    <label>📍 地点</label>
+                    <input id="c-location" type="text" placeholder="如：通州区">
+                    <label>📷 设备</label>
+                    <input id="c-device" type="text" placeholder="如：Samsung">
+                    <button class="search-btn" onclick="doSearch(false)">搜索</button>
+                </div>
+            </div>
+        </header>
+
+        <main id="main">
+            <!-- 搜索页面 -->
+            <div id="page-search">
+                <div id="empty" class="empty">
+                    <p>👆 填写条件搜索照片，或试试：</p>
+                    <div class="hints">
+                        <button onclick="example(this, {text:'猫'})">猫</button>
+                        <button onclick="example(this, {date_from:'2025-05-01',date_to:'2025-05-31'})">去年五月</button>
+                        <button onclick="example(this, {text:'鸟',location:'天津',date_from:'2025-12-01',date_to:'2025-12-31'})">去年12月天津的鸟</button>
+                        <button onclick="example(this, {text:'日落',location:'海边'})">海边日落</button>
+                    </div>
+                </div>
+                <div id="loading" class="loading" style="display:none">
+                    <div class="spin"></div>
+                    <p>搜索中...</p>
+                </div>
+                <div id="results-info" style="display:none"></div>
+                <div id="grid" class="grid"></div>
+            </div>
+
+            <!-- 人物页面 -->
+            <div id="page-people" style="display:none">
+                <div id="people-loading" class="loading" style="display:none">
+                    <div class="spin"></div>
+                    <p>加载人物...</p>
+                </div>
+
+                <!-- 人物总览 -->
+                <div id="people-overview">
+                    <div class="people-toolbar">
+                        <span id="people-count"></span>
+                        <div class="toolbar-actions">
+                            <button id="merge-mode-btn" class="toolbar-btn" onclick="toggleMergeMode()">🔗 合并模式</button>
+                            <button class="toolbar-btn" onclick="reindexFaces()">🔄 重新识别</button>
+                        </div>
+                    </div>
+                    <!-- 合并模式操作栏 -->
+                    <div id="merge-bar" class="merge-bar" style="display:none">
+                        <span id="merge-selected-count">已选 0 人</span>
+                        <div class="merge-bar-right">
+                            <input id="merge-name-input" type="text" placeholder="合并后的名字（可选）">
+                            <button class="merge-confirm-btn" onclick="doMerge()">合并</button>
+                            <button class="merge-cancel-btn" onclick="toggleMergeMode()">取消</button>
+                        </div>
+                    </div>
+                    <div id="people-grid" class="people-grid"></div>
+
+                    <!-- 隐藏区域 -->
+                    <div id="hidden-section" class="hidden-section" style="display:none">
+                        <div class="hidden-header" onclick="toggleHiddenSection()">
+                            <span id="hidden-toggle-icon">▶</span>
+                            <span id="hidden-count-text">已隐藏的人物</span>
+                        </div>
+                        <div id="hidden-grid" class="people-grid hidden-grid" style="display:none"></div>
+                    </div>
+                </div>
+
+                <!-- 某人照片列表 -->
+                <div id="people-detail" style="display:none">
+                    <div class="people-detail-header">
+                        <button class="back-btn" onclick="showPeopleOverview()">← 返回人物列表</button>
+                        <div class="person-title">
+                            <img id="detail-avatar" class="detail-avatar" src="">
+                            <span id="detail-name"></span>
+                            <span id="detail-count" class="detail-count"></span>
+                        </div>
+                        <div class="name-edit">
+                            <input id="detail-name-input" type="text" placeholder="输入名字...">
+                            <button class="save-btn" onclick="saveName()">保存</button>
+                        </div>
+                    </div>
+                    <div id="detail-grid" class="grid"></div>
+                </div>
+
+                <!-- 重索引进度 -->
+                <div id="reindex-status" class="reindex-status" style="display:none">
+                    <div class="spin"></div>
+                    <p>正在重新识别所有人脸，请稍候...</p>
+                </div>
+            </div>
+        </main>
+
+        <div id="modal" class="modal" onclick="closeModal(event)">
+            <div class="modal-body">
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+                <img id="modal-img" src="">
+                <video id="modal-video" controls playsinline style="display:none"></video>
+                <div id="modal-faces" class="modal-faces"></div>
+                <div id="modal-info" class="modal-info"></div>
+            </div>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>

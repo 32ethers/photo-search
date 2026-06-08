@@ -1,0 +1,46 @@
+# 要索引的文件夹（支持子文件夹递归扫描）
+photo_dirs:
+  - "/data/ai/photos"
+
+# 支持的图片格式
+supported_extensions:
+  - ".jpg"
+  - ".jpeg"
+  - ".png"
+  - ".heic"
+#  - ".webp"
+
+# 支持的视频格式
+video_extensions:
+  - ".mp4"
+  - ".mov"
+  - ".avi"
+  - ".3gp"
+  - ".mkv"
+
+# 模型路径（支持 HuggingFace model id 或本地路径）
+models:
+  siglip2: "/data/ai/siglip2-base-patch16-224"
+
+# 模型设备: auto / cpu / cuda
+device: "auto"
+
+# 数据存储目录（LanceDB数据 + 缩略图）
+data_dir: "./data"
+
+# 搜索默认参数
+search:
+  top_k: 30
+  threshold: 0.15
+
+# Web 服务端口
+port: 28800
+
+# 代理服务器
+proxy: "http://10.0.0.2:7890"
+
+# 人脸识别
+face:
+  model: "buffalo_sc"
+  cluster_threshold: 0.45
+  min_face_size: 30
