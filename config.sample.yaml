@@ -37,7 +37,7 @@ search:
 port: 28800
 
 # 代理服务器
-proxy: "http://10.0.0.2:7890"
+proxy: ""
 
 # 人脸识别
 face:
